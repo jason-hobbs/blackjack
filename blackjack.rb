@@ -14,11 +14,18 @@ def card_picks(s, c, tot, who)
   card_suite = s.sample
   card_num = c.sample
   if card_num.is_a? String
-    tot += 10
+    if card_num == 'Ace'
+      tot+= 11
+      if tot > 21
+        tot -= 10
+      end
+    else
+      tot += 10
+    end
   else
     tot += card_num
   end
-  puts "#{who} receives the #{card_num} of #{card_suite}"
+  puts "#{who} receives the #{card_num} of #{card_suite}\n\n"
   return tot
 end
 
@@ -36,7 +43,8 @@ def house_choice(suits, cards, house_total, player_total, bust, winner)
     return house_total
   end
   if house_total < 18 || house_total < player_total
-    unless house_total > 21
+    unless house_total > 21 || house_total > player_total || player_total > 21
+      puts 'House decides to take a card...'
       house_total = card_picks(suits, cards, house_total, 'House')
     end
   end
@@ -45,7 +53,7 @@ end
 
 def show_total(p, h)
   puts "Player total so far is #{p}"
-  puts "House total so far is #{h}"
+  puts "House total so far is #{h}\n\n"
 end
 
 def check_bust(p,h)
@@ -85,9 +93,11 @@ end
 
 
 system 'clear'
-puts "Let's play blackjack!"
+puts "Let's play blackjack!\n\n"
 2.times {player_total = card_picks(suits, cards, player_total, 'Player')}
+puts ''
 2.times {house_total = card_picks(suits, cards, house_total, 'House')}
+puts ''
 show_total(player_total, house_total)
 
 begin
